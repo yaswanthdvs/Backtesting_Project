@@ -1,16 +1,16 @@
 # 📈 Vectorized Backtesting Framework with SMA Crossover Strategy
 
-This project implements a **lightweight, vectorized backtesting engine** in Python to evaluate trading strategies on historical market data. As a demonstration, I apply a basic **SMA (Simple Moving Average) crossover strategy** to the XLE ETF — a proxy for the U.S. energy sector.
+This project implements a **lightweight, vectorized backtesting engine** in Python to evaluate trading strategies on historical market data. It demonstrates how a basic SMA crossover strategy can be extended with volatility filters to manage risk and improve robustness. As a demonstration, I applied this framework to the XLE ETF — a proxy for the U.S. energy sector: A naive SMA strategy, an ATR based volatility aware version, buy and hold benchmark.
 
 ---
 
 ## 🚀 Project Highlights
 
-- 🔁 **Modular backtesting engine** built from scratch using `NumPy` and `Pandas`
-- ⚙️ Strategy logic: SMA 20/50 crossover
-- 📊 Evaluates performance using key metrics: **Sharpe Ratio**, **Max Drawdown**, and cumulative return
-- 🖼️ Automatically generates and saves equity curve plots
-- 📦 Clean project structure with reusable components and data loading logic
+- 🔁 **Modular backtesting engine** built from scratch using `NumPy` and `Pandas`.
+- ⚙️ Strategies: Basic SMA crossover and ATR-filtered SMA crossover.
+- 📊 Evaluates performance using key metrics: **Sharpe Ratio**, **Sortino Ratio**, **Calmar Ratio**, **Max Drawdown**, and trade stats.
+- 🖼️ Automatically generates and saves equity curve comparison plots.
+- 📦 Clean project structure with reusable components and data loading logic.
 
 ---
 
@@ -18,30 +18,39 @@ This project implements a **lightweight, vectorized backtesting engine** in Pyth
 
 > **Asset:** XLE (Energy Select Sector SPDR Fund)  
 > **Period:** 2009–2025  
-> **Strategy:** Go long when 20-day SMA > 50-day SMA
+> **Strategies:**  
+> - **Naive SMA**: Go long when 20-day SMA > 50-day SMA  
+> - **Volatility-Aware SMA**: Same as above, but only when 14-day ATR is below its 100-day average  
 
 ### 📊 Key Metrics
 
-| Metric         | Value         |
-|----------------|---------------|
-| Sharpe Ratio   | –0.31         |
-| Max Drawdown   | –89.45%       |
+| Metric              | Naive SMA     | ATR-Filtered SMA |
+|---------------------|---------------|------------------|
+| Sharpe Ratio        | –0.33         | –0.05            |
+| Sortino Ratio       | –0.45         | –0.02            |
+| Calmar Ratio        | –0.98         | –0.34            |
+| Max Drawdown        | –90.41%       | –14.39%          |
+| Total Trades        | 98            | 157              |
+| Win Rate            | 28.6%         | 34.4%            |
+| Avg Profit (Winners)| 9.48%         | 4.02%            |
+| Avg Loss (Losers)   | –5.84%        | –5.00%           |
 
 ### 🧾 Interpretation
 
-The SMA 20/50 crossover strategy on XLE resulted in significant drawdowns and negative risk-adjusted returns. The strategy repeatedly entered false breakouts during volatile periods, leading to capital erosion.
+The **volatility-aware SMA strategy** demonstrates vastly improved drawdown control, albeit at the cost of muted returns. It filters out unstable market conditions and prevents premature trades, showcasing how a simple filter can boost risk-adjusted performance.
 
-### 📉 Equity Curve
+### 📉 Equity Curve Comparison
 
-![Equity Curve](plots/equity_curve.png)
+![Equity Curve Comparison](plots/equity_comparison.png)
 
 ---
 
-## 🔍 Key Learnings
+## 🔍 Key Takeaways
 
-- Not all strategies generalize across asset classes.
-- SMA crossover may not be suitable for mean-reverting or cyclical assets like energy.
-- Backtesting failures offer **valuable insight** into asset behavior and strategy robustness.
+- The **naive SMA strategy** performed poorly on XLE, with deep drawdowns and a negative Sharpe.
+- **Adding a volatility filter (ATR)** significantly improved the equity curve by avoiding whipsaws.
+- Not all strategies are equally effective across all assets — energy, in particular, may require regime filters.
+- This experiment showcases the **importance of tailoring strategy logic to asset characteristics**.
 
 ---
 
@@ -49,17 +58,20 @@ The SMA 20/50 crossover strategy on XLE resulted in significant drawdowns and ne
 
 I’m extending this project in two directions:
 
-### ✅ 1. **Volatility-Aware SMA Strategy**
-Add an **ATR-based volatility filter** to avoid trades during unstable regimes.
+### ✅ 1. Strategy Generalization
 
-### ✅ 2. **Asset Comparison**
-Apply the same strategy across:
-- **SPY** (broad U.S. equities)
+Apply both strategies to:
+- **SPY** (S&P 500)
 - **QQQ** (NASDAQ 100)
-- **BTC-USD** (crypto)
+- **BTC-USD** (Bitcoin)
 
-The goal is to evaluate **strategy robustness and generalizability** across asset classes.
+This will help evaluate performance **across asset classes and regimes**.
+
+### ✅ 2. Strategy Enhancement
+
+Experiment with:
+- **ATR thresholds** and parameter tuning
+- **Stop losses and position sizing**
+- **Signal smoothing** or combined indicators (e.g., SMA + RSI)
 
 ---
-
-## 📁 Project Structure
